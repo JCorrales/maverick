@@ -10,6 +10,8 @@ import java.util.Map;
  * @author Juan Andrés Corrales Duarte
  */
 public class Mesa {
+    public Integer porHablar = 2;
+    private Integer estadoRonda = 0;
     private Integer turno = 0;
     private List<Jugador> jugadores = new ArrayList<>();
     //el tiempo en segundos que tiene el jugador para accionar
@@ -52,12 +54,20 @@ public class Mesa {
         this.pozo = pozo;
     }
 
-    public void finTurno() {
+    public void finTurno(boolean haSubido) {
         turno++;
         if((turno + 1) > jugadores.size()){
             turno = 0;
         }
-        jugadores.get(turno).setTurno();
+        if(!haSubido){
+            porHablar--;
+            if(porHablar == 0){
+                finRonda();
+            }
+        }
+        if(porHablar > 0){
+            jugadores.get(turno).setTurno();
+        }
     }
     
     public void startGame(){
@@ -65,10 +75,13 @@ public class Mesa {
         for(int i = 0; i <= this.getJugadores().size(); i++){
             this.getJugadores().get(i).setFichas(BB*30);
         }
+        this.getJugadores().get(0).setRival(this.getJugadores().get(1));
+        this.getJugadores().get(1).setRival(this.getJugadores().get(0));
 
     }
     
     public void iniciarRonda(){
+        estadoRonda = Const.PREFLOP;
         mazo.mesclar();
         repartir();
         setCiegas();
@@ -96,24 +109,63 @@ public class Mesa {
         this.apuestas = apuestas;
     }
    
-    //usado para apostar e igualar
+    //usado para subir e igualar
     public void apostar(String jugador, Integer cantidad){
         apuestas.put(jugador, apuestas.get(jugador)+cantidad);
         pozo = pozo + cantidad;
     }
     
-    public void finRonda(Jugador jugador){
+    public void setGanador(Jugador jugador){
         for(int i=0; i<jugadores.size(); i++){
-            if(!jugadores.get(i).getNombre().equals(jugador.getNombre())){
-                jugadores.get(i).setCartas(null);
-                jugadores.get(i).setMano(null);
-                jugadores.get(i).setFichas(jugadores.get(i).getFichas()
-                        +pozo);
-            }
+            jugadores.get(i).setCartas(null);
+            jugadores.get(i).setMano(null);
         }
+        jugador.setFichas(jugador.getFichas()+pozo);
         apuestas.clear();
         pozo = 0;
         comunitarias = null;
     }
     
+    public void finRonda(){
+        porHablar = jugadores.size();
+        estadoRonda++;
+        switch(estadoRonda){
+            case Const.FLOP:
+                flop();
+            case Const.TURN:
+                turn();
+            case Const.RIVER:
+                river();
+        }
+        if(estadoRonda == Const.SHOWDOWN){
+            
+        }
+    }
+    
+    public String showDown(){
+        
+        return "ganador";
+    }
+    
+    private void flop(){
+        comunitarias = new Carta[5];
+        for(int i = 0; i < 5; i++){
+            comunitarias[i] = null;
+        }
+        comunitarias[0] = mazo.getCarta();
+        comunitarias[1] = mazo.getCarta();
+        comunitarias[2] = mazo.getCarta();
+        iniciarRonda();
+    }
+    
+    private void turn(){
+        comunitarias[3] = mazo.getCarta();
+        iniciarRonda();
+    }
+    
+    private void river(){
+        comunitarias[4] = mazo.getCarta();
+        iniciarRonda();
+    }
+        
 }

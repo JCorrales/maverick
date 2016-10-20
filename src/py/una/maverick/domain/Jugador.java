@@ -9,15 +9,20 @@ import java.util.List;
  * @author Juan Andrés Corrales Duarte
  */
 public abstract class Jugador {
-    public final int PASAR = 0;
-    public final int IGUALAR = 1;
-    public final int SUBIR = 2;
-    public final int RETIRARSE = 3;
     private String nombre;
     private Integer fichas;
     private Carta[] cartas = null;
     private Carta[] mano = null;
     private Mesa mesa;
+    private Jugador rival;
+
+    public Jugador getRival() {
+        return rival;
+    }
+
+    public void setRival(Jugador rival) {
+        this.rival = rival;
+    }
 
     public String getNombre() {
         return nombre;
@@ -68,7 +73,7 @@ public abstract class Jugador {
         fichas = fichas - cantidad;
         
         mesa.apostar(nombre, cantidad);
-        mesa.finTurno();
+        mesa.finTurno(true);
     }
     
     //igualar si es posible, all in en caso contrario
@@ -89,19 +94,24 @@ public abstract class Jugador {
         }
         
         mesa.apostar(nombre, cantidad);
-        mesa.finTurno();
+        mesa.finTurno(false);
     }
     
     public void pasar(){
-        mesa.finTurno();
+        mesa.finTurno(false);
     }
     
     public void retirarse(){
-        mesa.finTurno();
-        mesa.finRonda(this);
+        mesa.finTurno(false);
+        mesa.setGanador(rival);
     }
 
     public List<Integer> accionesPosibles(){
+        List<Integer> acciones = new ArrayList<>();
+        acciones.add(Const.RETIRARSE);
+        if(fichas == 0 || rival.getFichas() == 0){
+            return acciones;
+        }
         int mayor = 0;
         for (String jugador : mesa.getApuestas().keySet()) {
             if(!jugador.equals(this.getNombre())){
@@ -110,16 +120,21 @@ public abstract class Jugador {
                 }
             }
         }
-        List<Integer> acciones = new ArrayList<>();
-        acciones.add(IGUALAR);//igualar o all in
-        acciones.add(RETIRARSE);//retirarse
+        
+        acciones.add(Const.IGUALAR);//igualar o all in
         if(new Integer(mayor).equals(mesa.getApuestas().get(this.getNombre()))){
-            acciones.add(PASAR);
+            acciones.add(Const.PASAR);
         }
         if(this.getFichas() > mayor){
-            acciones.add(SUBIR);
+            acciones.add(Const.SUBIR);
         }
         return acciones;
     }
-        
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getNombre().equals(((Jugador) obj).getNombre());
+    }
+    
+    
 }
