@@ -2,6 +2,7 @@
 package py.una.maverick.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -108,7 +109,7 @@ public abstract class Jugador {
 
     public List<Integer> accionesPosibles(){
         List<Integer> acciones = new ArrayList<>();
-        acciones.add(Const.RETIRARSE);
+        acciones.add(C.RETIRARSE);
         if(fichas == 0 || rival.getFichas() == 0){
             return acciones;
         }
@@ -121,12 +122,12 @@ public abstract class Jugador {
             }
         }
         
-        acciones.add(Const.IGUALAR);//igualar o all in
+        acciones.add(C.IGUALAR);//igualar o all in
         if(new Integer(mayor).equals(mesa.getApuestas().get(this.getNombre()))){
-            acciones.add(Const.PASAR);
+            acciones.add(C.PASAR);
         }
         if(this.getFichas() > mayor){
-            acciones.add(Const.SUBIR);
+            acciones.add(C.SUBIR);
         }
         return acciones;
     }
@@ -136,5 +137,15 @@ public abstract class Jugador {
         return this.getNombre().equals(((Jugador) obj).getNombre());
     }
     
-    
+    public void evaluarMano(){
+        List<Carta> tmp = new ArrayList<>();
+        for (int i=0; i<mesa.getComunitarias().length; i++) {
+            if(mesa.getComunitarias()[i] != null){
+                tmp.add(mesa.getComunitarias()[i]);
+            }
+        }
+        tmp.add(cartas[0]);
+        tmp.add(cartas[1]);
+        Collections.sort(tmp);
+    }
 }

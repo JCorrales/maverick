@@ -16,15 +16,15 @@ public class Mazo {
     //public final Map<Integer, String> nombres = new HashMap<>();
     
     public Mazo(){
-        palos.put(0, "Treboles");
-        palos.put(1, "Corazones");
-        palos.put(2, "Espadas");
-        palos.put(3, "Diamantes");        
+        palos.put(C.TREBOLES, "Treboles");
+        palos.put(C.CORAZONES, "Corazones");
+        palos.put(C.ESPADAS, "Espadas");
+        palos.put(C.DIAMANTES, "Diamantes");        
     }
     
     public void mesclar(){
         for (Integer palo : palos.keySet()) {
-            for(short i=2; i<=14; i++){
+            for(int i=2; i<=14; i++){
                 cartas.add( new Carta(palo, i));
             }
         }

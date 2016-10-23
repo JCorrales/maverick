@@ -81,7 +81,7 @@ public class Mesa {
     }
     
     public void iniciarRonda(){
-        estadoRonda = Const.PREFLOP;
+        estadoRonda = C.PREFLOP;
         mazo.mesclar();
         repartir();
         setCiegas();
@@ -130,15 +130,14 @@ public class Mesa {
         porHablar = jugadores.size();
         estadoRonda++;
         switch(estadoRonda){
-            case Const.FLOP:
+            case C.FLOP:
                 flop();
-            case Const.TURN:
+            case C.TURN:
                 turn();
-            case Const.RIVER:
+            case C.RIVER:
                 river();
-        }
-        if(estadoRonda == Const.SHOWDOWN){
-            
+            case C.SHOWDOWN:
+                showDown();
         }
     }
     
@@ -155,17 +154,17 @@ public class Mesa {
         comunitarias[0] = mazo.getCarta();
         comunitarias[1] = mazo.getCarta();
         comunitarias[2] = mazo.getCarta();
-        iniciarRonda();
+        jugadores.get(turno).setTurno();
     }
     
     private void turn(){
         comunitarias[3] = mazo.getCarta();
-        iniciarRonda();
+        jugadores.get(turno).setTurno();
     }
     
     private void river(){
         comunitarias[4] = mazo.getCarta();
-        iniciarRonda();
+        jugadores.get(turno).setTurno();
     }
         
 }
