@@ -2,6 +2,7 @@
 package py.una.maverick.domain;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +18,10 @@ public class Mesa {
     //el tiempo en segundos que tiene el jugador para accionar
     private Integer tiempo = 8;
     private Mazo mazo;
-    private Carta[] comunitarias;
-    private Integer pozo;
+    private List<Carta> comunitarias = new ArrayList<>();
+    private Integer pozo = 0;
     private final Integer BB = 10;
-    private Map<String, Integer> apuestas;
+    private Map<String, Integer> apuestas = new HashMap<>();
 
     public List<Jugador> getJugadores() {
         return jugadores;
@@ -38,11 +39,11 @@ public class Mesa {
         this.tiempo = tiempo;
     }
 
-    public Carta[] getComunitarias() {
+    public List<Carta> getComunitarias() {
         return comunitarias;
     }
 
-    public void setComunitarias(Carta[] comunitarias) {
+    public void setComunitarias(List<Carta> comunitarias) {
         this.comunitarias = comunitarias;
     }
 
@@ -69,20 +70,28 @@ public class Mesa {
             jugadores.get(turno).setTurno();
         }
     }
+
+    public Mesa() {
+        
+        this.mazo = new Mazo();
+    }
+    
+    
     
     public void startGame(){
         // fichas iniciales
-        for(int i = 0; i <= this.getJugadores().size(); i++){
+        for(int i = 0; i < this.getJugadores().size(); i++){
             this.getJugadores().get(i).setFichas(BB*30);
+            this.getJugadores().get(i).setMesa(this);
         }
         this.getJugadores().get(0).setRival(this.getJugadores().get(1));
         this.getJugadores().get(1).setRival(this.getJugadores().get(0));
-
+        iniciarRonda();
     }
     
     public void iniciarRonda(){
         estadoRonda = C.PREFLOP;
-        mazo.mesclar();
+        mazo.mezclar();
         repartir();
         setCiegas();
         jugadores.get(turno).setTurno();
@@ -95,7 +104,7 @@ public class Mesa {
     }
     
     public void repartir(){
-        for(int i = 0; i <= this.getJugadores().size(); i++){
+        for(int i = 0; i < this.getJugadores().size(); i++){
             Carta[] cartas = new Carta[]{mazo.getCarta(), mazo.getCarta()};
             this.getJugadores().get(i).setCartas(cartas);
         }
@@ -111,7 +120,7 @@ public class Mesa {
    
     //usado para subir e igualar
     public void apostar(String jugador, Integer cantidad){
-        apuestas.put(jugador, apuestas.get(jugador)+cantidad);
+        apuestas.put(jugador, apuestas.getOrDefault(jugador, 0)+cantidad);
         pozo = pozo + cantidad;
     }
     
@@ -147,24 +156,31 @@ public class Mesa {
     }
     
     private void flop(){
-        comunitarias = new Carta[5];
-        for(int i = 0; i < 5; i++){
-            comunitarias[i] = null;
-        }
-        comunitarias[0] = mazo.getCarta();
-        comunitarias[1] = mazo.getCarta();
-        comunitarias[2] = mazo.getCarta();
+        comunitarias = new ArrayList<>();
+        comunitarias.add(mazo.getCarta());
+        comunitarias.add(mazo.getCarta());
+        comunitarias.add(mazo.getCarta());
         jugadores.get(turno).setTurno();
     }
     
     private void turn(){
-        comunitarias[3] = mazo.getCarta();
+        comunitarias.add(mazo.getCarta());
         jugadores.get(turno).setTurno();
     }
     
     private void river(){
-        comunitarias[4] = mazo.getCarta();
+        comunitarias.add(mazo.getCarta());
         jugadores.get(turno).setTurno();
     }
+
+    public Integer getBB() {
+        return BB;
+    }
+
+    public Integer getTurno() {
+        return turno;
+    }
+    
+    
         
 }

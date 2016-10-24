@@ -31,4 +31,6 @@ public class C {
     public static final int CORAZONES = 1;
     public static final int ESPADAS = 2;
     public static final int DIAMANTES = 3;
+    
+    public static final String [] ACTIONS_NAMES = new String []{"PASAR","IGUALAR","SUBIR","RETIRARSE"};
 }

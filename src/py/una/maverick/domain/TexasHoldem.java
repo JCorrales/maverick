@@ -153,8 +153,48 @@ public class TexasHoldem {
             }
         }
         List<Carta> par2 = getPar(restantes);
+        if(par2 == null || par2.isEmpty()){
+            return null;
+        }
         
-        return null;
+        List<Carta> pares = new ArrayList();
+        pares.addAll(par1);
+        pares.addAll(par2);
+        return pares;
+    }
+    
+    private List<Carta> getEscalera(List<Carta> cartas){
+        Collections.sort(cartas);
+        List<Carta> escalera = new ArrayList<>();
+        List<Carta> tmp = new ArrayList<>();
+        //la siguiete carta debe ser numero + 1
+        for(int i=0; i < cartas.size()-1; i++){
+            int next = cartas.get(i+1).getNumero();
+            if(cartas.get(i).getNumero()+1 == next || cartas.get(i).getNumero() == next){
+                if(cartas.get(i).getNumero()+1 == next){
+                    tmp.add(cartas.get(i));
+                }else{
+                    //TO DO: decidir color
+                }
+            }else{//opa escalera
+                if(tmp.size() > escalera.size()){
+                    escalera = tmp;
+                }
+                tmp = new ArrayList<>();
+            }
+        }
+        Collections.sort(escalera);
+        if(escalera.size() == 6){
+            escalera.remove(0);
+        }else if(escalera.size() == 7){
+            escalera.remove(0);
+            escalera.remove(1);
+        }
+        if(escalera.size() < 5){
+            return null;
+        }else{
+            return escalera;
+        }
     }
     
 }

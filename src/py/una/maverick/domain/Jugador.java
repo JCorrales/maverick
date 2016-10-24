@@ -9,13 +9,14 @@ import java.util.List;
  *
  * @author Juan Andrés Corrales Duarte
  */
-public abstract class Jugador {
+public abstract class Jugador implements Client{
     private String nombre;
     private Integer fichas;
     private Carta[] cartas = null;
     private Carta[] mano = null;
     private Mesa mesa;
     private Jugador rival;
+    private Integer action;
 
     public Jugador getRival() {
         return rival;
@@ -68,6 +69,7 @@ public abstract class Jugador {
     public abstract void setTurno();
       
     public void subir(Integer cantidad){
+        action = C.SUBIR;
         if(cantidad > fichas){
             throw new RuntimeException("no hay suficientes fichas");
         }
@@ -79,6 +81,7 @@ public abstract class Jugador {
     
     //igualar si es posible, all in en caso contrario
     public void igualar(){
+        action = C.IGUALAR;
         Integer mayor = 0;
         for (Integer apuesta : mesa.getApuestas().values()) {
             if(apuesta > mayor){
@@ -100,9 +103,11 @@ public abstract class Jugador {
     
     public void pasar(){
         mesa.finTurno(false);
+        action = C.PASAR;
     }
     
     public void retirarse(){
+        action = C.RETIRARSE;
         mesa.finTurno(false);
         mesa.setGanador(rival);
     }
@@ -129,6 +134,7 @@ public abstract class Jugador {
         if(this.getFichas() > mayor){
             acciones.add(C.SUBIR);
         }
+        
         return acciones;
     }
 
@@ -139,13 +145,23 @@ public abstract class Jugador {
     
     public void evaluarMano(){
         List<Carta> tmp = new ArrayList<>();
-        for (int i=0; i<mesa.getComunitarias().length; i++) {
-            if(mesa.getComunitarias()[i] != null){
-                tmp.add(mesa.getComunitarias()[i]);
+        for (int i=0; i<mesa.getComunitarias().size(); i++) {
+            if(mesa.getComunitarias().get(i) != null){
+                tmp.add(mesa.getComunitarias().get(i));
             }
         }
         tmp.add(cartas[0]);
         tmp.add(cartas[1]);
         Collections.sort(tmp);
     }
+
+    public Integer getAction() {
+        return action;
+    }
+
+    public void setAction(Integer action) {
+        this.action = action;
+    }
+    
+    
 }

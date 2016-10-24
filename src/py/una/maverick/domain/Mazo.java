@@ -22,7 +22,7 @@ public class Mazo {
         palos.put(C.DIAMANTES, "Diamantes");        
     }
     
-    public void mesclar(){
+    public void mezclar(){
         for (Integer palo : palos.keySet()) {
             for(int i=2; i<=14; i++){
                 cartas.add( new Carta(palo, i));
