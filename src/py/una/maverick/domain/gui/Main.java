@@ -60,7 +60,7 @@ public class Main extends JFrame implements Client{
 
     /** The current actor's name. */
     private String actorName; 
-
+    
     /**
      * Constructor.
      */
@@ -82,6 +82,7 @@ public class Main extends JFrame implements Client{
         pokerBot = new DummyBot();
         players.put(pokerBot.getNombre(), pokerBot);
         Humano humano = new Humano(this);
+        controlPanel.setHumano(humano);
         players.put(humano.getNombre(),   humano);
         List<Jugador>jugadores = new ArrayList<>();
         jugadores.add(humano);
@@ -243,6 +244,8 @@ public class Main extends JFrame implements Client{
             }
         }
     }
+
+    
 
     private void setDealer(boolean isDealer) {
         if (dealerName != null) {

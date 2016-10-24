@@ -56,6 +56,10 @@ public class Mesa {
     }
 
     public void finTurno(boolean haSubido) {
+        for (Map.Entry<String, Integer> entry : apuestas.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+        }
         turno++;
         if((turno + 1) > jugadores.size()){
             turno = 0;
@@ -96,8 +100,9 @@ public class Mesa {
     }
     
     public void setCiegas(){
-        jugadores.get(turno).subir(BB/2);
-        jugadores.get(turno).getRival().subir(BB);        
+        System.out.println("ciegas");
+        jugadores.get(turno).pagarCiegas(BB/2);
+        jugadores.get(turno).getRival().pagarCiegas(BB);        
     }
     
     public void repartir(){

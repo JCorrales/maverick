@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import py.una.maverick.domain.C;
 import py.una.maverick.domain.Humano;
+import py.una.maverick.domain.Jugador;
 
 
 public class ControlPanel extends JPanel implements ActionListener {
@@ -45,7 +46,7 @@ public class ControlPanel extends JPanel implements ActionListener {
     /** The selected action. */
     private Integer selectedAction;
     
-    //private Humano humano = new Humano();
+    private Jugador humano;
     
     /**
      * Constructor.
@@ -128,7 +129,7 @@ public class ControlPanel extends JPanel implements ActionListener {
                 });
                 selectedAction = amountPanel.show(selectedAction, minBet, cash);
                 if (selectedAction == C.SUBIR) {
-                    //humano.subir(amountPanel.getAmount());
+                    humano.subir(amountPanel.getAmount());
                 } else {
                     // User cancelled.
                     selectedAction = null;
@@ -177,4 +178,11 @@ public class ControlPanel extends JPanel implements ActionListener {
         return button;
     }
 
+    public Jugador getHumano() {
+        return humano;
+    }
+
+    public void setHumano(Jugador humano) {
+        this.humano = humano;
+    }
 }

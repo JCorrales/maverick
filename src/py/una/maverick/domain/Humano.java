@@ -25,7 +25,7 @@ public class Humano extends Jugador{
         Integer accion = main.act(getMesa().getBB(), getMesa().getBB(), getMesa().getJugadores().get(getMesa().getTurno()).accionesPosibles());
         switch(accion){
             case C.SUBIR:
-                this.subir(10);
+                //this.subir(10);
                 break;
             case C.PASAR:
                 this.pasar();

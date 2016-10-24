@@ -69,14 +69,18 @@ public abstract class Jugador implements Client{
     public abstract void setTurno();
       
     public void subir(Integer cantidad){
+        System.out.println(getNombre()+" subiendo: "+cantidad);
         action = C.SUBIR;
-        if(cantidad > fichas){
-            throw new RuntimeException("no hay suficientes fichas");
-        }
         fichas = fichas - cantidad;
         
-        mesa.apostar(nombre, cantidad);
+        mesa.apostar(this.getNombre(), cantidad);
         mesa.finTurno(true);
+    }
+    
+    public void pagarCiegas(Integer cantidad){
+        action = C.SUBIR;
+        fichas = fichas - cantidad;
+        mesa.apostar(this.getNombre(), cantidad);
     }
     
     //igualar si es posible, all in en caso contrario
@@ -96,7 +100,7 @@ public abstract class Jugador implements Client{
             cantidad = fichas;
             fichas = 0;
         }
-        
+        cantidad = cantidad-mesa.getApuestas().getOrDefault(getNombre(),0);
         mesa.apostar(nombre, cantidad);
         mesa.finTurno(false);
     }
