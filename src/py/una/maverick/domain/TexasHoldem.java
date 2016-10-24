@@ -1,5 +1,7 @@
 package py.una.maverick.domain;
 
+import com.sun.javafx.scene.control.skin.VirtualFlow;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,11 +15,41 @@ public class TexasHoldem {
     Map<Integer, Integer> iguales = new HashMap<>();
     Map<Integer, Integer> palos = new HashMap<>();
     
-    public void getMano(List<Carta> cartas){
+    public Mano getMano(List<Carta> cartas){
         Collections.sort(cartas);
         contarCartas(cartas);
         contarPalos(cartas);
-        
+        Mano mano = null;
+        mano = getPoker(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getFull(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getColor(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getEscalera(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getTrio(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getDosPares(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getPar(cartas);
+        if(mano != null){
+            return mano;
+        }
+        mano = getCartaAlta(cartas);
+        return mano;
     }
     
     private void contarCartas(List<Carta> cartas){
@@ -38,15 +70,19 @@ public class TexasHoldem {
         }
     }
     
-    private Carta getCartaAlta(List<Carta> cartas){
+    private Mano getCartaAlta(List<Carta> cartas){
         if(cartas == null || cartas.isEmpty()){
             return null;
         }
         Collections.sort(cartas);
-        return cartas.get(cartas.size()-1);
+        List<Carta> mano = new ArrayList<>();
+        mano.add(cartas.get(cartas.size()-1));
+        return new Mano(C.CARTA_ALTA, mano, null);
     }
     
-    private List<Carta> getPoker(List<Carta> cartas){
+    private Mano getPoker(List<Carta> cartas){
+        List<Carta> mano = new ArrayList<>();
+        List<Carta> kickers = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : iguales.entrySet()) {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
@@ -60,19 +96,21 @@ public class TexasHoldem {
                         restantes.add(cartas.get(i));
                     }
                 }
-                Carta alta = getCartaAlta(restantes);
+                Carta alta = getCartaAlta(restantes).getMano().get(0);
                 if(alta != null){
-                    poker.add(alta);
+                    //poker.add(alta);
+                    kickers.add(alta);
                 }
-                return poker;
+                return new Mano(C.POKER, mano, kickers);
             }
         }
         return null;
     }
     
-    private List<Carta> getFull(List<Carta> cartas){
-        List<Carta> trio = getTrio(cartas);
+    private Mano getFull(List<Carta> cartas){
+        List<Carta> trio = getTrio(cartas).getMano();
         List<Carta> restantes = new ArrayList<>();
+        Mano mano = null;
         if(trio != null && !trio.isEmpty()){
             for (int i=0; i<cartas.size(); i++) {
                 if(!cartas.get(i).getNumero().equals(trio.get(0).getNumero())){
@@ -80,14 +118,15 @@ public class TexasHoldem {
                 }
             }
         }
-        List<Carta> par = getPar(restantes);
+        List<Carta> par = getPar(restantes).getMano();
         List<Carta> full = new ArrayList();
         if(trio != null && !trio.isEmpty() && par != null && !par.isEmpty()){
             full.addAll(trio);
             full.addAll(par);
+            mano = new Mano(C.FULL, full, null);
         }
         
-        return full.isEmpty() ? null : full;
+        return mano == null ? null : mano;
     }
     
     /**
@@ -95,8 +134,9 @@ public class TexasHoldem {
      * @param cartas
      * @return las cartas que conforman el mejor trio o null
      */
-    private List<Carta> getTrio(List<Carta> cartas){
+    private Mano getTrio(List<Carta> cartas){
         List<Carta> trio = new ArrayList<>();
+        Mano mano = null;
         for (Map.Entry<Integer, Integer> entry : iguales.entrySet()) {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
@@ -113,14 +153,47 @@ public class TexasHoldem {
                 }
             }
         }
-        return trio.isEmpty() ? null : trio;
+        if(trio.isEmpty()){
+            return null;
+        }
+        List<Carta> restantes = minus(cartas, trio);
+        List<Carta> kickers = new ArrayList();
+        Carta alta1 = getCartaAlta(restantes).getMano().get(0);
+        restantes.remove(alta1);//FIXME: Carta.compareTo no consistente con equals
+        Carta alta2 = getCartaAlta(restantes).getMano().get(0);
+        
+        return new Mano(C.TRIO, trio, kickers);
+    }
+    
+    private List<Carta> minus(List<Carta> mayor, List<Carta> menor){
+        if(mayor == null || mayor.isEmpty()){
+            return new ArrayList<>();
+        }
+        if(menor == null || menor.isEmpty()){
+            return new ArrayList<>();
+        }
+        List<Carta> restantes = new ArrayList<>();
+        for(int i = 0; i < mayor.size(); i++){
+            boolean esta = false;
+            for(int j = 0; j < menor.size(); j++){
+                if(mayor.get(i).getNumero().equals(menor.get(j).getNumero())){
+                    if(mayor.get(i).getPalo().equals(menor.get(j).getPalo())){
+                        esta = true;
+                    }
+                }
+            }
+            if(!esta){
+                restantes.add(mayor.get(i));
+            }
+        }
+        return restantes;
     }
     /**
      * 
      * @param cartas
      * @return las cartas que conforman el mejor par o null
      */
-    private List<Carta> getPar(List<Carta> cartas){
+    private Mano getPar(List<Carta> cartas){
         List<Carta> par = new ArrayList<>();
         for (Map.Entry<Integer, Integer> entry : iguales.entrySet()) {
             Integer key = entry.getKey();
@@ -138,11 +211,15 @@ public class TexasHoldem {
                 }
             }
         }
-        return par.isEmpty() ? null : par;
+        if(par.isEmpty()){
+            return null;
+        }
+        List<Carta> kickers = minus(cartas, par);
+        return new Mano(C.PAR, par, kickers);
     }
     
-    private List<Carta> getDosPares(List<Carta> cartas){
-        List<Carta> par1 = getPar(cartas);
+    private Mano getDosPares(List<Carta> cartas){
+        List<Carta> par1 = getPar(cartas).getMano();
         if(par1 == null || par1.isEmpty()){
             return null;
         }
@@ -152,7 +229,7 @@ public class TexasHoldem {
                 restantes.add(cartas.get(i));
             }
         }
-        List<Carta> par2 = getPar(restantes);
+        List<Carta> par2 = getPar(restantes).getMano();
         if(par2 == null || par2.isEmpty()){
             return null;
         }
@@ -160,10 +237,17 @@ public class TexasHoldem {
         List<Carta> pares = new ArrayList();
         pares.addAll(par1);
         pares.addAll(par2);
-        return pares;
+        restantes = minus(cartas, pares);
+        Carta alta = getCartaAlta(restantes).getMano().get(0);
+        List<Carta> kickers = new ArrayList<>();
+        if(alta != null){
+            kickers.add(alta);
+        }
+        
+        return new Mano(C.DOS_PARES, pares, kickers);
     }
     
-    private List<Carta> getEscalera(List<Carta> cartas){
+    private Mano getEscalera(List<Carta> cartas){
         Collections.sort(cartas);
         List<Carta> escalera = new ArrayList<>();
         List<Carta> tmp = new ArrayList<>();
@@ -193,11 +277,11 @@ public class TexasHoldem {
         if(escalera.size() < 5){
             return null;
         }else{
-            return escalera;
+            return new Mano(C.ESCALERA, escalera, null);
         }
     }
     
-    private List<Carta> getColor(List<Carta> cartas){
+    private Mano getColor(List<Carta> cartas){
         for (Map.Entry<Integer, Integer> entry : palos.entrySet()) {
             Integer key = entry.getKey();
             Integer value = entry.getValue();
@@ -209,7 +293,7 @@ public class TexasHoldem {
                         color.add(cartas.get(i));
                     }
                 }
-                return color;
+                return new Mano(C.COLOR, color, null);
             }
         }
         return null;

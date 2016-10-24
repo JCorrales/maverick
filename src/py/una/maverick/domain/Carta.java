@@ -25,7 +25,26 @@ public class Carta implements Comparable<Carta>{
 
     @Override
     public int compareTo(Carta o) {
+        //FIXME: Carta.compareTo no consistente con equals
         return this.numero.compareTo(o.getNumero());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Carta objeto = null;
+        try{
+            objeto = (Carta) obj;
+        }catch(Exception ex){
+            return false;
+        }
+        
+        if(!getNumero().equals(objeto.getNumero())){
+            return false;
+        }
+        if(!getPalo().equals(objeto.getPalo())){
+            return false;
+        }
+        return true;
     }
 
     
