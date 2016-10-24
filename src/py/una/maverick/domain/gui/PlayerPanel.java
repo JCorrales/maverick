@@ -1,19 +1,3 @@
-// This file is part of the 'texasholdem' project, an open source
-// Texas Hold'em poker application written in Java.
-//
-// Copyright 2009 Oscar Stigter
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 package py.una.maverick.domain.gui;
 
@@ -33,21 +17,14 @@ import py.una.maverick.domain.Jugador;
 
 
 
-/**
- * Panel representing a player at the table.
- * 
- * @author Oscar Stigter
- */
 public class PlayerPanel extends JPanel {
     
     /** The serial version UID. */
     private static final long serialVersionUID = 5851738752943098606L;
 
-    /** Filled dealer button image when player is dealer. */
     private static final Icon BUTTON_PRESENT_ICON =
             ResourceManager.getIcon("/images/button_present.png");
     
-    /** Empty dealer button image when player is not dealer. */
     private static final Icon BUTTON_ABSENT_ICON =
             ResourceManager.getIcon("/images/button_absent.png");
     
@@ -176,7 +153,7 @@ public class PlayerPanel extends JPanel {
     public void update(Jugador player) {
         nameLabel.setText(player.getNombre());
         cashLabel.setText("$ " + player.getFichas());
-        int bet = player.getMesa().getApuestas().get(player.getNombre());
+        int bet = player.getMesa().getApuestas().getOrDefault(player.getNombre(),0);
         if (bet == 0) {
             betLabel.setText(" ");
         } else {
@@ -190,7 +167,7 @@ public class PlayerPanel extends JPanel {
         }
         if (action != C.RETIRARSE) {
             Carta[] cards = player.getCartas();
-            if (cards.length == 2) {
+            if (cards.length == 2 && player.getNombre().equals("humano")) {
                 // Visible cards.
                 card1Label.setIcon(ResourceManager.getCardImage(cards[0]));
                 card2Label.setIcon(ResourceManager.getCardImage(cards[1]));
@@ -220,12 +197,7 @@ public class PlayerPanel extends JPanel {
         }
     }
     
-    /**
-     * Sets whether it's this player's turn to act.
-     * 
-     * @param inTurn
-     *            True if it's the player's turn, otherwise false.
-     */
+
     public void setInTurn(boolean inTurn) {
         if (inTurn) {
             nameLabel.setForeground(Color.YELLOW);
@@ -234,11 +206,6 @@ public class PlayerPanel extends JPanel {
         }
     }
     
-    /**
-     * Custom label for a player panel.
-     * 
-     * @author Oscar Stigter
-     */
     private static class MyLabel extends JLabel {
 
         /** Serial version UID. */

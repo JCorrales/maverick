@@ -76,8 +76,6 @@ public class Mesa {
         this.mazo = new Mazo();
     }
     
-    
-    
     public void startGame(){
         // fichas iniciales
         for(int i = 0; i < this.getJugadores().size(); i++){
@@ -99,8 +97,7 @@ public class Mesa {
     
     public void setCiegas(){
         jugadores.get(turno).subir(BB/2);
-        jugadores.get(turno > jugadores.size()-1 ? 0 : turno).subir(BB);
-        
+        jugadores.get(turno).getRival().subir(BB);        
     }
     
     public void repartir(){
@@ -138,6 +135,7 @@ public class Mesa {
     public void finRonda(){
         porHablar = jugadores.size();
         estadoRonda++;
+        apuestas.clear();
         switch(estadoRonda){
             case C.FLOP:
                 flop();

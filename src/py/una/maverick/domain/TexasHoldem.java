@@ -197,4 +197,21 @@ public class TexasHoldem {
         }
     }
     
+    private List<Carta> getColor(List<Carta> cartas){
+        for (Map.Entry<Integer, Integer> entry : palos.entrySet()) {
+            Integer key = entry.getKey();
+            Integer value = entry.getValue();
+            if(value.equals(5)){
+                List<Carta> color = new ArrayList<>();
+                List<Carta> restantes = new ArrayList<>();
+                for(int i=0; i<cartas.size(); i++){
+                    if(cartas.get(i).getPalo().equals(key)){
+                        color.add(cartas.get(i));
+                    }
+                }
+                return color;
+            }
+        }
+        return null;
+    }
 }
