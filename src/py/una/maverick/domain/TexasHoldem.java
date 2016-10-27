@@ -20,35 +20,67 @@ public class TexasHoldem {
         contarCartas(cartas);
         contarPalos(cartas);
         Mano mano = null;
-        mano = getPoker(cartas);
+        try{
+            mano = getPoker(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getFull(cartas);
+        try{
+            mano = getFull(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getColor(cartas);
+        try{
+            mano = getColor(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getEscalera(cartas);
+        try{
+            mano = getEscalera(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getTrio(cartas);
+        try{
+            mano = getTrio(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getDosPares(cartas);
+        try{
+            mano = getDosPares(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getPar(cartas);
+        try{
+            mano = getPar(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         if(mano != null){
             return mano;
         }
-        mano = getCartaAlta(cartas);
+        try{
+            mano = getCartaAlta(cartas);
+        }catch(NullPointerException n){
+            mano = null;
+        }
         return mano;
     }
     
@@ -108,6 +140,7 @@ public class TexasHoldem {
     }
     
     private Mano getFull(List<Carta> cartas){
+        
         List<Carta> trio = getTrio(cartas).getMano();
         List<Carta> restantes = new ArrayList<>();
         Mano mano = null;

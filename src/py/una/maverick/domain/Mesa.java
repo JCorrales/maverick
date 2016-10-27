@@ -22,6 +22,7 @@ public class Mesa {
     private Integer pozo = 0;
     private final Integer BB = 10;
     private Map<String, Integer> apuestas = new HashMap<>();
+    private TexasHoldem reglas = new TexasHoldem();
 
     public List<Jugador> getJugadores() {
         return jugadores;
@@ -135,6 +136,8 @@ public class Mesa {
         apuestas.clear();
         pozo = 0;
         comunitarias = null;
+        mazo = new Mazo();
+        iniciarRonda();
     }
     
     public void finRonda(){
@@ -154,8 +157,32 @@ public class Mesa {
     }
     
     public String showDown(){
+        Map<Jugador, Mano> manos = new HashMap<>();
+        for(int i =0; i< jugadores.size(); i++){
+            Carta[] cartas = jugadores.get(i).getCartas();
+            List<Carta> todas = new ArrayList();
+            todas.addAll(comunitarias);
+            todas.add(cartas[0]);
+            todas.add(cartas[1]);
+            Mano mano = reglas.getMano(todas);
+            manos.put(jugadores.get(i), mano);
+        }
+        Jugador ganador = null;
+        if(manos.get(jugadores.get(0)).getValor() > manos.get(jugadores.get(1)).getValor()){
+            ganador = jugadores.get(0);
+        }else if(manos.get(jugadores.get(0)).getValor().equals(manos.get(jugadores.get(1)).getValor())){
+            if(manos.get(jugadores.get(0)).getMano().get(0).getNumero() > 
+                    manos.get(jugadores.get(1)).getMano().get(0).getNumero()){
+                ganador = jugadores.get(0);
+            }else{
+                ganador = jugadores.get(1);
+            }
+        }else{
+            ganador = jugadores.get(1);
+        }
         
-        return "ganador";
+        setGanador(ganador);
+        return ganador.getNombre();
     }
     
     private void flop(){
