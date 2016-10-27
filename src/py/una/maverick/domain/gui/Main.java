@@ -29,41 +29,29 @@ public class Main extends JFrame implements Client{
     private static final long serialVersionUID = -5414633931666096443L;
     
 
-    /** The size of the big blind. */
     private static final int BIG_BLIND = 10;
     
-    /** The starting cash per player. */
     private static final int STARTING_CASH = 500;
     
    private Mesa mesa = new Mesa();
     
-    /** The players at the table. */
     private final Map<String, Jugador> players;
     
-    /** The GridBagConstraints. */
     private final GridBagConstraints gc;
     
-    /** The board panel. */
     private final BoardPanel boardPanel;
     
-    /** The control panel. */
     private final ControlPanel controlPanel;
     
-    /** The player panels. */
     private final Map<String, PlayerPanel> playerPanels;
     
-    /** The human player. */
     private final Jugador pokerBot;
     
-    /** The current dealer's name. */
     private String dealerName; 
 
-    /** The current actor's name. */
     private String actorName; 
     
-    /**
-     * Constructor.
-     */
+
     public Main() {
         super("Texas Hold'em poker");
         
@@ -126,12 +114,6 @@ public class Main extends JFrame implements Client{
         
     }
     
-    /**
-     * The application's entry point.
-     * 
-     * @param args
-     *            The command line arguments.
-     */
     public static void main(String[] args) {
         new Main();
     }
@@ -204,20 +186,7 @@ public class Main extends JFrame implements Client{
         return controlPanel.getUserInput(minBet, pokerBot.getFichas(), allowedActions);
     }
 
-    /**
-     * Adds an UI component.
-     * 
-     * @param component
-     *            The component.
-     * @param x
-     *            The column.
-     * @param y
-     *            The row.
-     * @param width
-     *            The number of columns to span.
-     * @param height
-     *            The number of rows to span.
-     */
+
     private void addComponent(Component component, int x, int y, int width, int height) {
         gc.gridx = x;
         gc.gridy = y;
@@ -230,12 +199,7 @@ public class Main extends JFrame implements Client{
         getContentPane().add(component, gc);
     }
 
-    /**
-     * Sets whether the actor  is in turn.
-     * 
-     * @param isInTurn
-     *            Whether the actor is in turn.
-     */
+
     private void setActorInTurn(boolean isInTurn) {
         if (actorName != null) {
             PlayerPanel playerPanel = playerPanels.get(actorName);

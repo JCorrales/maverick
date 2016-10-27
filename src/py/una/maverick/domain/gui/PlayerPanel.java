@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -19,7 +21,6 @@ import py.una.maverick.domain.Jugador;
 
 public class PlayerPanel extends JPanel {
     
-    /** The serial version UID. */
     private static final long serialVersionUID = 5851738752943098606L;
 
     private static final Icon BUTTON_PRESENT_ICON =
@@ -34,28 +35,20 @@ public class PlayerPanel extends JPanel {
     private static final Icon CARD_BACK_ICON =
             ResourceManager.getIcon("/images/card_back.png");
     
-    /** The border. */
     private static final Border BORDER = new EmptyBorder(10, 10, 10, 10);
     
-    /** The label with the player's name. */
     private JLabel nameLabel;
     
-    /** The label with the player's amount of cash. */
     private JLabel cashLabel;
     
-    /** The label with the last action performed. */
     private JLabel actionLabel;
     
-    /** The label with the player's current bet. */
     private JLabel betLabel;
 
-    /** The label for the first hole card. */
     private JLabel card1Label;
 
-    /** The label for the second hole card. */
     private JLabel card2Label;
 
-    /** The label for the dealer button image. */
     private JLabel dealerButton;
     
     /**
@@ -143,13 +136,7 @@ public class PlayerPanel extends JPanel {
         setInTurn(false);
         setDealer(false);
     }
-    
-    /**
-     * Updates the panel.
-     * 
-     * @param player
-     *            The player.
-     */
+
     public void update(Jugador player) {
         nameLabel.setText(player.getNombre());
         cashLabel.setText("$ " + player.getFichas());
@@ -181,14 +168,14 @@ public class PlayerPanel extends JPanel {
             card1Label.setIcon(CARD_PLACEHOLDER_ICON);
             card2Label.setIcon(CARD_PLACEHOLDER_ICON);
         }
+        if(player.getMesa().getEstadoRonda().equals(C.SHOWDOWN)){
+            Carta[] cards = player.getCartas();
+            card1Label.setIcon(ResourceManager.getCardImage(cards[0]));
+            card2Label.setIcon(ResourceManager.getCardImage(cards[1]));
+        }
     }
     
-    /**
-     * Sets whether the player is the dealer.
-     * 
-     * @param isDealer
-     *            True if the dealer, otherwise false.
-     */
+
     public void setDealer(boolean isDealer) {
         if (isDealer) {
             dealerButton.setIcon(BUTTON_PRESENT_ICON);
@@ -208,12 +195,8 @@ public class PlayerPanel extends JPanel {
     
     private static class MyLabel extends JLabel {
 
-        /** Serial version UID. */
         private static final long serialVersionUID = 3607645928062082095L;
 
-        /**
-         * Constructor.
-         */
         public MyLabel() {
             setBorder(UIConstants.LABEL_BORDER);
             setForeground(UIConstants.TEXT_COLOR);
@@ -221,6 +204,6 @@ public class PlayerPanel extends JPanel {
             setText(" ");
         }
         
-    } // MyLabel
+    } 
     
 }

@@ -21,35 +21,26 @@ public class AmountPanel extends JPanel implements ChangeListener, ActionListene
     /** Serial version UID. */
     private static final long serialVersionUID = 171860711156799253L;
 
-    /** Number of increasing amounts to choose from (ticks on slider bar). */
+    /** BIG BLINDS */
     private static final int NO_OF_TICKS = 10;
 
-    /** Slider with the amount to bet or raise. */
     private final JSlider amountSlider;
 
-    /** Label with selected amount. */
     private final JLabel amountLabel;
     
-    /** Bet/Raise button. */
     private final JButton betRaiseButton;
     
-    /** Cancel button. */
     private final JButton cancelButton;
     
-    /** Incremental bet amounts mapped to slider's index. */
+    /** map apuestas slider index */
     private final HashMap<Integer, Integer> sliderAmounts;
     
-    /** Monitor while waiting for user input. */
     private final Object monitor = new Object();
     
     private Integer defaultAction;
     
-    /** The selected action. */
     private Integer selectedAction;
-    
-    /**
-     * Constructor.
-     */
+
     public AmountPanel() {
         setBackground(UIConstants.TABLE_COLOR);
         

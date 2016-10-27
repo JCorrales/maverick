@@ -16,33 +16,20 @@ import py.una.maverick.domain.Carta;
 
 public class BoardPanel extends JPanel {
     
-    /** The serial version UID. */
     private static final long serialVersionUID = 8530615901667282755L;
 
-    /** The maximum number of community cards. */
     private static final int NO_OF_CARDS = 5;
     
-    /** The control panel. */
     private final ControlPanel controlPanel;
     
-    /** Label with the bet. */
     private final JLabel betLabel;
 
-    /** Label with the pot. */
     private final JLabel potLabel;
 
-    /** Labels with the community cards. */
     private final JLabel[] cardLabels;
     
-    /** Label with a custom message. */
     private final JLabel messageLabel;
     
-    /**
-     * Constructor.
-     * 
-     * @param controlPanel
-     *            The control panel.
-     */
     public BoardPanel(ControlPanel controlPanel) {
         this.controlPanel = controlPanel;
         
@@ -155,15 +142,6 @@ public class BoardPanel extends JPanel {
         update(null, 0, 0);
     }
     
-    /**
-     * Updates the current hand status.
-     * 
-     * @param cards
-     * @param bet
-     *            The bet.
-     * @param pot
-     *            The pot.
-     */
     public void update(List<Carta> cards, int bet, int pot) {
         if (bet == 0) {
             betLabel.setText(" ");
@@ -185,12 +163,7 @@ public class BoardPanel extends JPanel {
         }
     }
     
-    /**
-     * Sets a custom message.
-     * 
-     * @param message
-     *            The message.
-     */
+
     public void setMessage(String message) {
         if (message.length() == 0) {
             messageLabel.setText(" ");
@@ -199,10 +172,6 @@ public class BoardPanel extends JPanel {
         }
     }
     
-    /**
-     * Waits for the user to continue.
-     * @param acciones
-     */
     public void waitForUserInput(List<Integer> acciones) {
         controlPanel.waitForUserInput(acciones);
     }

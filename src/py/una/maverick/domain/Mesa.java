@@ -23,6 +23,7 @@ public class Mesa {
     private final Integer BB = 10;
     private Map<String, Integer> apuestas = new HashMap<>();
     private TexasHoldem reglas = new TexasHoldem();
+    private Jugador dealer;
 
     public List<Jugador> getJugadores() {
         return jugadores;
@@ -57,10 +58,6 @@ public class Mesa {
     }
 
     public void finTurno(boolean haSubido) {
-        for (Map.Entry<String, Integer> entry : apuestas.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-        }
         turno++;
         if((turno + 1) > jugadores.size()){
             turno = 0;
@@ -89,10 +86,20 @@ public class Mesa {
         }
         this.getJugadores().get(0).setRival(this.getJugadores().get(1));
         this.getJugadores().get(1).setRival(this.getJugadores().get(0));
+        dealer = getJugadores().get(0);
         iniciarRonda();
     }
     
     public void iniciarRonda(){
+        resetApuestas();
+        pozo = 0;
+        comunitarias = null;
+        mazo = new Mazo();
+        dealer = dealer.getRival();
+        for(int i=0; i<jugadores.size(); i++){
+            jugadores.get(i).setCartas(null);
+            jugadores.get(i).setMano(null);
+        }
         estadoRonda = C.PREFLOP;
         mazo.mezclar();
         repartir();
@@ -101,9 +108,10 @@ public class Mesa {
     }
     
     public void setCiegas(){
-        System.out.println("ciegas");
-        jugadores.get(turno).pagarCiegas(BB/2);
-        jugadores.get(turno).getRival().pagarCiegas(BB);        
+        dealer.pagarCiegas(BB/2);
+        dealer.getRival().pagarCiegas(BB);
+        int index = jugadores.indexOf(dealer);
+        turno = index;
     }
     
     public void repartir(){
@@ -120,6 +128,14 @@ public class Mesa {
     public void setApuestas(Map<String, Integer> apuestas) {
         this.apuestas = apuestas;
     }
+    
+    public void resetApuestas() {
+        for (Map.Entry<String, Integer> entrySet : apuestas.entrySet()) {
+            String key = entrySet.getKey();
+            Integer value = entrySet.getValue();
+            this.apuestas.put(key, 0);
+        }
+    }
    
     //usado para subir e igualar
     public void apostar(String jugador, Integer cantidad){
@@ -128,22 +144,28 @@ public class Mesa {
     }
     
     public void setGanador(Jugador jugador){
-        for(int i=0; i<jugadores.size(); i++){
-            jugadores.get(i).setCartas(null);
-            jugadores.get(i).setMano(null);
-        }
         jugador.setFichas(jugador.getFichas()+pozo);
-        apuestas.clear();
-        pozo = 0;
-        comunitarias = null;
-        mazo = new Mazo();
+        if(estadoRonda.equals(C.SHOWDOWN)){
+            jugadores.get(turno).setTurno();//esperar para ver las cartas
+            estadoRonda = C.PREFLOP;
+        }
         iniciarRonda();
     }
+
+    public Integer getEstadoRonda() {
+        return estadoRonda;
+    }
+    
+    public void setEstadoRonda(Integer estado) {
+        this.estadoRonda = estado;
+    }
+    
+    
     
     public void finRonda(){
         porHablar = jugadores.size();
         estadoRonda++;
-        apuestas.clear();
+        resetApuestas();
         switch(estadoRonda){
             case C.FLOP:
                 flop();

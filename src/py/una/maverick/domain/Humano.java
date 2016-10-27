@@ -22,12 +22,23 @@ public class Humano extends Jugador{
         main.playerUpdated(getRival());
         main.playerUpdated(this);
         main.boardUpdated(getMesa().getComunitarias(), getMesa().getBB(), getMesa().getPozo());
-        Integer accion = main.act(getMesa().getBB(), getMesa().getBB(), getMesa().getJugadores().get(getMesa().getTurno()).accionesPosibles());
+        List<Integer> acciones = this.accionesPosibles();
+        if(getMesa().getEstadoRonda().equals(C.SHOWDOWN)){
+            acciones.clear();
+            acciones.add(C.PASAR);
+        }
+        if(acciones.isEmpty()){
+            this.pasar();
+        }
+        Integer accion = main.act(getMesa().getBB(), getMesa().getBB(), acciones);
         switch(accion){
             case C.SUBIR:
                 //this.subir(10);
                 break;
             case C.PASAR:
+                if(getMesa().getEstadoRonda().equals(C.SHOWDOWN)){
+                    getMesa().iniciarRonda();
+                }
                 this.pasar();
                 break;
             case C.IGUALAR:

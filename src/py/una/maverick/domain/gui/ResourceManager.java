@@ -12,7 +12,6 @@ public abstract class ResourceManager {
     private static final String IMAGE_PATH_FORMAT = "/images/card_%s.png"; 
     
     public static ImageIcon getCardImage(Carta card) {
-        // Use image order, which is different from value order.
         String sequenceNrString = card.getPalo() + "_"+card.getNumero();
         String path = String.format(IMAGE_PATH_FORMAT, sequenceNrString);
         return getIcon(path);

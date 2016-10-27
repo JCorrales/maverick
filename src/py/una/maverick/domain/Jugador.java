@@ -69,9 +69,12 @@ public abstract class Jugador implements Client{
     public abstract void setTurno();
       
     public void subir(Integer cantidad){
-        System.out.println(getNombre()+" subiendo: "+cantidad);
         action = C.SUBIR;
+        if(cantidad > fichas){
+            cantidad = fichas;
+        }
         fichas = fichas - cantidad;
+        
         
         mesa.apostar(this.getNombre(), cantidad);
         mesa.finTurno(true);
@@ -86,21 +89,16 @@ public abstract class Jugador implements Client{
     //igualar si es posible, all in en caso contrario
     public void igualar(){
         action = C.IGUALAR;
-        Integer mayor = 0;
-        for (Integer apuesta : mesa.getApuestas().values()) {
-            if(apuesta > mayor){
-                mayor = apuesta;
-            }
-        }
+        Integer bet = mesa.getApuestas().get(rival.getNombre());
         int cantidad;
-        if(fichas >= mayor){
-            cantidad = mayor;
-            fichas = fichas - mayor;
+        if(fichas >= bet){
+            cantidad = bet;
         }else{
             cantidad = fichas;
             fichas = 0;
         }
         cantidad = cantidad-mesa.getApuestas().getOrDefault(getNombre(),0);
+        fichas = fichas - cantidad;
         mesa.apostar(nombre, cantidad);
         mesa.finTurno(false);
     }
@@ -120,19 +118,20 @@ public abstract class Jugador implements Client{
         List<Integer> acciones = new ArrayList<>();
         acciones.add(C.RETIRARSE);
         if(fichas == 0 || rival.getFichas() == 0){
-            return acciones;
+            return new ArrayList<>();
         }
         int mayor = 0;
         for (String jugador : mesa.getApuestas().keySet()) {
             if(!jugador.equals(this.getNombre())){
-                if(mesa.getApuestas().get(jugador) > mayor){
+                if(mesa.getApuestas().getOrDefault(jugador, 0) > mayor){
                     mayor = mesa.getApuestas().get(jugador);
                 }
             }
         }
-        
-        acciones.add(C.IGUALAR);//igualar o all in
-        if(new Integer(mayor).equals(mesa.getApuestas().get(this.getNombre()))){
+        if(mayor > mesa.getApuestas().getOrDefault(this.getNombre(), 0)){
+            acciones.add(C.IGUALAR);//igualar o all in
+        }
+        if(new Integer(mayor).equals(mesa.getApuestas().getOrDefault(this.getNombre(), 0))){
             acciones.add(C.PASAR);
         }
         if(this.getFichas() > mayor){

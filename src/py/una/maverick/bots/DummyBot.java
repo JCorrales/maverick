@@ -59,6 +59,9 @@ public class DummyBot extends Bot {
     /** {@inheritDoc} */
     @Override
     public Integer act(int minBet, int currentBet, List<Integer> allowedActions) {
+        if(allowedActions.isEmpty()){
+            return C.PASAR;
+        }
         if (allowedActions.contains(C.PASAR)) {
             return C.PASAR;
         } else {

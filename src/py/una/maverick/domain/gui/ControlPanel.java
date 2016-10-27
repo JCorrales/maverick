@@ -23,34 +23,22 @@ public class ControlPanel extends JPanel implements ActionListener {
     
 
 
-    /** The Check button. */
     private final JButton checkButton;
     
-    /** The Call button. */
     private final JButton callButton;
     
-    /** The Bet button. */
     private final JButton betButton;
    
-    
-    /** The Fold button. */
     private final JButton foldButton;
     
-    
-    /** The betting panel. */
     private final AmountPanel amountPanel;
 
-    /** Monitor while waiting for user input. */
     private final Object monitor = new Object();
     
-    /** The selected action. */
     private Integer selectedAction;
     
     private Jugador humano;
-    
-    /**
-     * Constructor.
-     */
+
     public ControlPanel() {
         setBackground(UIConstants.TABLE_COLOR);
         //continueButton = createActionButton(Action.CONTINUE);
@@ -61,10 +49,7 @@ public class ControlPanel extends JPanel implements ActionListener {
         amountPanel = new AmountPanel();
     }
     
-    /**
-     * Waits for the user to click the Continue button.
-     * @param acciones
-     */
+
     public void waitForUserInput(List<Integer>acciones) {
         
         getUserInput(0, 0, acciones);
@@ -86,25 +71,25 @@ public class ControlPanel extends JPanel implements ActionListener {
                         if (allowedActions.contains(C.PASAR)) {
                             System.out.println("AGREGANDO BOTON PASAR");
                             add(checkButton);
-                            repaint();
+                            //repaint();
                         }
                         if (allowedActions.contains(C.IGUALAR)) {
                             System.out.println("AGREGANDO BOTON IGUALAR");
                             add(callButton);
-                            repaint();
+                            //repaint();
                         }
                         if (allowedActions.contains(C.SUBIR)) {
                             System.out.println("AGREGANDO BOTON SUBIR");
                             add(betButton);
-                            repaint();
+                            //repaint();
                         }
                         if (allowedActions.contains(C.RETIRARSE)) {
                             System.out.println("AGREGANDO BOTON RETIRARSE");
                             add(foldButton);
-                            repaint();
+                            //repaint();
                         }
                     
-                    //repaint();
+                    repaint();
                 }
             });
             
@@ -128,7 +113,7 @@ public class ControlPanel extends JPanel implements ActionListener {
                     }
                 });
                 selectedAction = amountPanel.show(selectedAction, minBet, cash);
-                if (selectedAction == C.SUBIR) {
+                if (selectedAction != null && selectedAction == C.SUBIR) {
                     humano.subir(amountPanel.getAmount());
                 } else {
                     // User cancelled.
@@ -139,11 +124,7 @@ public class ControlPanel extends JPanel implements ActionListener {
         
         return selectedAction;
     }
-    
-    /*
-     * (non-Javadoc)
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
+
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -161,14 +142,7 @@ public class ControlPanel extends JPanel implements ActionListener {
         }
     }
     
-    /**
-     * Creates an action button.
-     * 
-     * @param action
-     *            The action.
-     * 
-     * @return The button.
-     */
+
     private JButton createActionButton(String action) {
         String label = action;
         JButton button = new JButton(label);
