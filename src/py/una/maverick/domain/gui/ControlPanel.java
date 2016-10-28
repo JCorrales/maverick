@@ -1,6 +1,8 @@
 
 package py.una.maverick.domain.gui;
 
+import java.awt.GridBagConstraints;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -57,36 +59,24 @@ public class ControlPanel extends JPanel implements ActionListener {
     
 
     public Integer getUserInput(int minBet, int cash, final List<Integer> allowedActions) {
-        for (Integer allowedAction : allowedActions) {
-            System.out.println("py.una.maverick.domain.gui.ControlPanel.getUserInput()" + C.ACTIONS_NAMES[allowedAction]);
-        }
         selectedAction = null;
         while (selectedAction == null) {
             // Show the buttons for the allowed actions.
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    removeAll();
-                    
+                    removeAll();                    
                         if (allowedActions.contains(C.PASAR)) {
-                            System.out.println("AGREGANDO BOTON PASAR");
                             add(checkButton);
-                            //repaint();
                         }
                         if (allowedActions.contains(C.IGUALAR)) {
-                            System.out.println("AGREGANDO BOTON IGUALAR");
                             add(callButton);
-                            //repaint();
                         }
                         if (allowedActions.contains(C.SUBIR)) {
-                            System.out.println("AGREGANDO BOTON SUBIR");
                             add(betButton);
-                            //repaint();
                         }
                         if (allowedActions.contains(C.RETIRARSE)) {
-                            System.out.println("AGREGANDO BOTON RETIRARSE");
                             add(foldButton);
-                            //repaint();
                         }
                     
                     repaint();

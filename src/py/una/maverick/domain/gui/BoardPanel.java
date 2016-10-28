@@ -49,9 +49,9 @@ public class BoardPanel extends JPanel {
         gc.weightx = 1.0;
         gc.weighty = 0.0;
         gc.insets = new Insets(0, 5, 0, 5);
-        add(label, gc);
+        //add(label, gc);
         
-        label = new JLabel("Pot");
+        label = new JLabel("Pozo");
         label.setForeground(Color.GREEN);
         gc.gridx = 3;
         gc.gridy = 0;
@@ -77,7 +77,7 @@ public class BoardPanel extends JPanel {
         gc.weightx = 1.0;
         gc.weighty = 0.0;
         gc.insets = new Insets(5, 5, 5, 5);
-        add(betLabel, gc);
+        //add(betLabel, gc);
 
         potLabel = new JLabel(" ");
         potLabel.setBorder(UIConstants.LABEL_BORDER);

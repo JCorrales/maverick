@@ -33,4 +33,8 @@ public class C {
     public static final int DIAMANTES = 3;
     
     public static final String [] ACTIONS_NAMES = new String []{"PASAR","IGUALAR","SUBIR","RETIRARSE"};
+    public static final String [] RANK_NAMES = 
+            new String []{"CARTA ALTA","PAR","DOS PARES","TRIO", 
+                "ESCALERA", "COLOR", "FULL", "POKER", "ESCALERA COLOR",
+            "ESCALERA REAL"};
 }

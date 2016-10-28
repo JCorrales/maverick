@@ -151,6 +151,21 @@ public class Mesa {
         }
         iniciarRonda();
     }
+    
+    public void setEmpate(){
+        System.out.println("Empate!");
+        Jugador jugador0 = jugadores.get(0);
+        jugador0.setFichas(
+                jugador0.getFichas()+apuestas.get(jugador0.getNombre()));
+        Jugador jugador1 = jugadores.get(1);
+        jugador1.setFichas(
+                jugador1.getFichas()+apuestas.get(jugador1.getNombre()));
+        if(estadoRonda.equals(C.SHOWDOWN)){
+            jugadores.get(turno).setTurno();//esperar para ver las cartas
+            estadoRonda = C.PREFLOP;
+        }
+        iniciarRonda();
+    }
 
     public Integer getEstadoRonda() {
         return estadoRonda;
@@ -178,7 +193,7 @@ public class Mesa {
         }
     }
     
-    public String showDown(){
+    public void showDown(){
         Map<Jugador, Mano> manos = new HashMap<>();
         for(int i =0; i< jugadores.size(); i++){
             Carta[] cartas = jugadores.get(i).getCartas();
@@ -187,24 +202,30 @@ public class Mesa {
             todas.add(cartas[0]);
             todas.add(cartas[1]);
             Mano mano = reglas.getMano(todas);
+            System.out.println("mano size: "+mano.getMano().size());
             manos.put(jugadores.get(i), mano);
         }
         Jugador ganador = null;
-        if(manos.get(jugadores.get(0)).getValor() > manos.get(jugadores.get(1)).getValor()){
+        int resultado = manos.get(jugadores.get(0)).compareTo(manos.get(jugadores.get(1)));
+        if(resultado == 1){
             ganador = jugadores.get(0);
-        }else if(manos.get(jugadores.get(0)).getValor().equals(manos.get(jugadores.get(1)).getValor())){
-            if(manos.get(jugadores.get(0)).getMano().get(0).getNumero() > 
-                    manos.get(jugadores.get(1)).getMano().get(0).getNumero()){
-                ganador = jugadores.get(0);
-            }else{
-                ganador = jugadores.get(1);
+            System.out.println("Ganador: "+jugadores.get(0).getNombre());
+            for(Carta carta : manos.get(jugadores.get(0)).getMano()){
+                System.out.println(carta.getNumero()+" "+carta.getPalo());
             }
-        }else{
+            System.out.println();
+        }else if(resultado == -1){
+            System.out.println("Ganador: "+jugadores.get(1).getNombre());
+            for(Carta carta : manos.get(jugadores.get(1)).getMano()){
+                System.out.print(carta.getNumero()+" ");
+            }
+            System.out.println();
             ganador = jugadores.get(1);
+        }else{
+            setEmpate();
+            return;
         }
-        
         setGanador(ganador);
-        return ganador.getNombre();
     }
     
     private void flop(){

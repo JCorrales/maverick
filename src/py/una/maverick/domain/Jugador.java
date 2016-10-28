@@ -145,18 +145,6 @@ public abstract class Jugador implements Client{
     public boolean equals(Object obj) {
         return this.getNombre().equals(((Jugador) obj).getNombre());
     }
-    
-    public void evaluarMano(){
-        List<Carta> tmp = new ArrayList<>();
-        for (int i=0; i<mesa.getComunitarias().size(); i++) {
-            if(mesa.getComunitarias().get(i) != null){
-                tmp.add(mesa.getComunitarias().get(i));
-            }
-        }
-        tmp.add(cartas[0]);
-        tmp.add(cartas[1]);
-        Collections.sort(tmp);
-    }
 
     public Integer getAction() {
         return action;
