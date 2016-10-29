@@ -14,6 +14,7 @@ import java.util.Set;
 
 import javax.swing.JFrame;
 import py.una.maverick.bots.DummyBot;
+import py.una.maverick.bots.MaverickBot;
 import py.una.maverick.domain.C;
 import py.una.maverick.domain.Carta;
 import py.una.maverick.domain.Client;
@@ -67,7 +68,7 @@ public class Main extends JFrame implements Client{
         addComponent(boardPanel, 1, 1, 1, 1);
         
         players = new LinkedHashMap<>();
-        pokerBot = new DummyBot();
+        pokerBot = new MaverickBot(70, 50);
         players.put(pokerBot.getNombre(), pokerBot);
         Humano humano = new Humano(this);
         controlPanel.setHumano(humano);

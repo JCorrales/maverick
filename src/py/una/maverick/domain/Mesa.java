@@ -24,6 +24,15 @@ public class Mesa {
     private Map<String, Integer> apuestas = new HashMap<>();
     private TexasHoldem reglas = new TexasHoldem();
     private Jugador dealer;
+    private Integer currentBet = 0;
+
+    public Integer getCurrentBet() {
+        return currentBet;
+    }
+
+    public void setCurrentBet(Integer currentBet) {
+        this.currentBet = currentBet;
+    }
 
     public List<Jugador> getJugadores() {
         return jugadores;
@@ -92,6 +101,7 @@ public class Mesa {
     
     public void iniciarRonda(){
         resetApuestas();
+        currentBet = 0;
         pozo = 0;
         comunitarias = null;
         mazo = new Mazo();

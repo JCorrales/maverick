@@ -77,6 +77,7 @@ public abstract class Jugador implements Client{
         
         
         mesa.apostar(this.getNombre(), cantidad);
+        mesa.setCurrentBet(cantidad);
         mesa.finTurno(true);
     }
     
